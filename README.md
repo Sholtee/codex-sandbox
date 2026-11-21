@@ -28,11 +28,20 @@ Set `CODEX_WORKSPACE_PATH` relative to the submodule, or use an absolute path. F
 
 Compose mounts the selected folder at `/workspace`. Each workspace builds its image on first use and reuses it on subsequent starts, so different workspaces can use different submodule revisions.
 
-1. Open [the desktop viewer](http://127.0.0.1:6080/vnc.html?resize=remote), click **Connect**, and enter your password (default: `codexdev`).
+The initializer writes these viewer settings to new `.env` files. Add them to an existing `.env` if you want to customize them.
+
+```dotenv
+NOVNC_PORT=6080
+VNC_PASSWORD=codexdev
+```
+
+To run multiple sandboxes on the same host, give each a distinct `COMPOSE_PROJECT_NAME` and `NOVNC_PORT`. For example, set `NOVNC_PORT=6081` for the second sandbox. Use a throwaway password of 6–8 printable ASCII characters.
+
+To start a second sandbox from the same checkout, copy `.env` to a file outside the checkout and change its project name and port. From the sandbox directory, run `docker-compose --env-file /path/to/second.env up`.
+
+1. Open [the desktop viewer](http://127.0.0.1:6080/vnc.html?resize=remote) using your configured port. Click **Connect** and enter your `VNC_PASSWORD`.
 2. Sign in with ChatGPT using the browser inside the displayed desktop.
 3. Select Codex and add `/workspace` as a project.
-
-To override the viewer password, set `VNC_PASSWORD` in the host environment or the sandbox's local `.env` before starting. Use a throwaway password of 6–8 printable ASCII characters.
 
 Run `docker-compose stop` to stop the desktop, or quit the desktop app. Closing the viewer tab disconnects the browser. Run `docker-compose up` to resume a stopped desktop.
 
@@ -46,7 +55,7 @@ Run `docker-compose stop` to stop the desktop, or quit the desktop app. Closing 
 - If you rename the workspace folder or an older prefix is invalid in an image name (for example, `build_`), update `COMPOSE_PROJECT_NAME` in the sandbox's local `.env`.
 - To reuse an existing home volume, find it with `docker volume ls` and set `CODEX_HOME_VOLUME` to its exact name in `.env` before starting. For example, use `CODEX_HOME_VOLUME=pub-codex-sandbox_desktop-home` if that volume holds your desktop data.
 - `/workspace` is the writable host checkout: edits, including Git operations, immediately affect host files.
-- The viewer listens only on `127.0.0.1:6080`. The container runs non-root, but nested app/browser sandboxes are disabled and Codex defaults to Full access (`sandbox_mode = "danger-full-access"`, `approval_policy = "never"`), without command approval prompts. Credentials are stored in the home volume; outbound networking can reach host/LAN services.
+- The viewer is published only on `127.0.0.1` at the port set by `NOVNC_PORT`. The container runs non-root, but nested app/browser sandboxes are disabled and Codex defaults to Full access (`sandbox_mode = "danger-full-access"`, `approval_policy = "never"`), without command approval prompts. Credentials are stored in the home volume; outbound networking can reach host/LAN services.
 
 On Linux, the checkout must be writable by UID/GID 1000. External Git worktree metadata is not mounted.
 

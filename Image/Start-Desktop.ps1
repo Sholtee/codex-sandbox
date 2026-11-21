@@ -128,7 +128,7 @@ try {
   $services.Add((Start-DesktopProcess 'openbox'))
   $services.Add((Start-DesktopProcess 'websockify' @('--web=/usr/share/novnc', '0.0.0.0:6080', '127.0.0.1:5900')))
   $services.Add((Start-DesktopProcess (Join-Path $PSScriptRoot 'launch-chatgpt.sh') $args))
-  Write-Host "`nOpen http://127.0.0.1:6080/vnc.html?resize=remote"
+  Write-Host "`nOpen http://127.0.0.1:$($env:NOVNC_PORT ?? '6080')/vnc.html?resize=remote"
 
   # Process objects retain early exits while the other services are starting.
   while (![DesktopSignals]::ExitCode) {

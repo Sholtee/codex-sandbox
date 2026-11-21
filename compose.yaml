@@ -22,6 +22,7 @@ services:
     user: "1000:1000"
     working_dir: /workspace
     environment:
+      NOVNC_PORT: "${NOVNC_PORT:-6080}"
       VNC_PASSWORD: "${VNC_PASSWORD:-codexdev}"
       RUST_LOG: "off"
     read_only: true
@@ -36,7 +37,7 @@ services:
     cpus: 4.0
     shm_size: 512m
     ports:
-      - "127.0.0.1:6080:6080"
+      - "127.0.0.1:${NOVNC_PORT:-6080}:6080"
     # Keep /tmp writable with a read-only root filesystem and discard diagnostic
     # logs on stop so they do not accumulate in the persistent home volume.
     tmpfs:
