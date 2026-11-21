@@ -8,10 +8,6 @@
 
 $ErrorActionPreference = 'Stop'
 $PSNativeCommandUseErrorActionPreference = $true
-$env:DOTNET_CLI_TELEMETRY_OPTOUT = 'true'
-$env:DOTNET_ADD_GLOBAL_TOOLS_TO_PATH = 'false'
-$env:DOTNET_GENERATE_ASPNET_CERTIFICATE = 'false'
-$env:POWERSHELL_TELEMETRY_OPTOUT = 'true'
 
 if (!$IsLinux) { throw 'Run this check inside the Codex development container.' }
 
