@@ -6,12 +6,14 @@
 #                                                                           #
 #############################################################################
 
+name: ${CODEX_SANDBOX_NAME:-codex}
+
 services:
   codex:
     extends:
       file: ./Image/dependencies.yml
       service: codex
-    image: &sandbox-name ${COMPOSE_PROJECT_NAME}-codex-sandbox
+    image: &sandbox-name ${CODEX_SANDBOX_NAME:-${COMPOSE_PROJECT_NAME}-codex-sandbox}
     container_name: *sandbox-name
     pull_policy: never
     build:
@@ -60,4 +62,4 @@ services:
 
 volumes:
   desktop-home:
-    name: ${CODEX_HOME_VOLUME:-${COMPOSE_PROJECT_NAME}-codex-sandbox_desktop-home}
+    name: ${CODEX_HOME_VOLUME:-${CODEX_SANDBOX_NAME:-${COMPOSE_PROJECT_NAME}-codex-sandbox}_desktop-home}

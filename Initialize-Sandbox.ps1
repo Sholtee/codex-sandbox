@@ -21,11 +21,12 @@ if ($LASTEXITCODE -ne 0 -or !$roots) { throw 'Could not locate the Git workspace
 
 $workspace = Get-Item -LiteralPath $roots[0]
 $project = ($workspace.Name.ToLowerInvariant() -creplace '[^a-z0-9_-]', '').Trim('-', '_')
+$sandboxName = "$project-codex-sandbox".TrimStart('-')
 New-Item -Path $envFile -ItemType File -Value (@(
-  "COMPOSE_PROJECT_NAME=$project"
+  "CODEX_SANDBOX_NAME=$sandboxName"
   "CODEX_WORKSPACE_PATH=$([IO.Path]::GetRelativePath($PSScriptRoot, $workspace.FullName).Replace('\', '/'))"
   'NOVNC_PORT=6080'
   'VNC_PASSWORD=codexdev'
   ''
 ) -join "`n") | Out-Null
-Write-Host "Configured sandbox for $($workspace.FullName) using project '$project'."
+Write-Host "Configured sandbox for '$($workspace.FullName)' using project '$sandboxName'."

@@ -28,7 +28,7 @@ Your sign-in, settings, and browser data persist in a Docker volume across stops
 Edit `.env` beside [compose.yaml](compose.yaml) to change the workspace or connection settings. For example, a checkout named `MyApp` with the sandbox under `Docker/Codex` could use the following settings.
 
 ```dotenv
-COMPOSE_PROJECT_NAME=myapp
+CODEX_SANDBOX_NAME=myapp-codex-sandbox
 CODEX_WORKSPACE_PATH=../..
 NOVNC_PORT=6080
 VNC_PASSWORD=codexdev
@@ -36,7 +36,7 @@ VNC_PASSWORD=codexdev
 
 `CODEX_WORKSPACE_PATH` points to the folder you want to open as `/workspace`. Use an absolute path or one relative to the sandbox directory. On Linux, the folder must be writable by UID/GID 1000.
 
-The viewer listens on `127.0.0.1`. If you run two sandboxes at once, give each its own `COMPOSE_PROJECT_NAME` and `NOVNC_PORT`, then use that port in the viewer URL. Choose a throwaway viewer password of 6–8 printable ASCII characters. Run `docker compose up -d` to apply `.env` changes.
+The viewer listens on `127.0.0.1`. If you run two sandboxes at once, give each its own `CODEX_SANDBOX_NAME` and `NOVNC_PORT`, then use that port in the viewer URL. Choose a throwaway viewer password of 6–8 printable ASCII characters. Run `docker compose up -d` to apply `.env` changes.
 
 ## Customize the tools and Codex instructions
 
