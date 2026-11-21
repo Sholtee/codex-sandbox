@@ -40,7 +40,8 @@ Run `docker-compose stop` to stop the desktop, or quit the desktop app. Closing 
 
 - Edit [Image/dependencies.yml](Image/dependencies.yml) to change tool versions, Debian packages, or Python packages. Under `services.codex.build.args`, `APT_PACKAGES` is a commented JSON array of APT arguments. Use `"package"` for the available Debian version or `"package=version"` to pin it. Compose passes the array to the installer as a single build argument.
 - `UV_PACKAGES` uses the same format for Python requirements: use `"package"` for the available version or `"package==version"` to pin it. These packages share the `/opt/serena` virtual environment; keep `serena-agent` in the list for the configured MCP server and C# language server setup.
-- After updating dependencies or the submodule, run `docker-compose up --build` to rebuild and start the desktop. Use `docker-compose build` to rebuild the image alone.
+- `CHATGPT_VERSION` defaults to `"latest"`; set a numeric release version to pin the desktop app.
+- After updating dependencies or the submodule, run `docker-compose up --build` to rebuild and start the desktop. Use `docker-compose build` to rebuild the image alone. To refresh floating dependencies such as ChatGPT `latest`, run `docker-compose build --no-cache` followed by `docker-compose up`.
 - Settings, login, and browser data persist in `<project-name>-codex_desktop-home`. For example, `myapp` uses `myapp-codex_desktop-home`. Avoid `docker-compose down --volumes` unless you intend to erase them.
 - If you rename the workspace folder or an older prefix is invalid in an image name (for example, `build_`), update `COMPOSE_PROJECT_NAME` in the sandbox's local `.env`. To reuse the saved home, find its volume with `docker volume ls` and set `CODEX_HOME_VOLUME` to that name before starting.
 - `/workspace` is the writable host checkout: edits, including Git operations, immediately affect host files.

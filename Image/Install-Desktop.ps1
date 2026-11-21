@@ -27,11 +27,11 @@ serena download-ls-dependencies csharp
 Move-Item -LiteralPath /root/.serena/language_servers/static -Destination /opt/serena-language-servers
 uv cache clean
 
-$appUrl = $env:CHATGPT_DEB_URL
-if (!$appUrl) {
-  $appUrl = "https://persistent.oaistatic.com/codex-app-prod/linux/deb/pool/main/c/chatgpt/chatgpt_${env:CHATGPT_VERSION}_$($env:TARGETARCH).deb"
-}
-curl --fail --location --retry 3 $appUrl --output /tmp/chatgpt.deb
+curl --fail --location --retry 3 $(if ($env:CHATGPT_VERSION -eq 'latest') {
+  "https://persistent.oaistatic.com/codex-app-prod/linux/deb/latest/chatgpt_$($env:TARGETARCH).deb"
+} else {
+  "https://persistent.oaistatic.com/codex-app-prod/linux/deb/pool/main/c/chatgpt/chatgpt_${env:CHATGPT_VERSION}_$($env:TARGETARCH).deb"
+}) --output /tmp/chatgpt.deb
 apt-get install -y --no-install-recommends /tmp/chatgpt.deb
 Remove-Item -LiteralPath /tmp/chatgpt.deb
 Get-ChildItem -LiteralPath /var/lib/apt/lists -Force | Remove-Item -Recurse -Force

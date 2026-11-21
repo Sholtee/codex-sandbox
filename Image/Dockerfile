@@ -13,9 +13,8 @@ FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION} AS dotnet
 FROM ghcr.io/astral-sh/uv:${UV_VERSION} AS uv
 FROM debian:${DEBIAN_VERSION}
 
-# BuildKit supplies amd64/arm64; an explicit URL can select another app release.
+# BuildKit supplies amd64/arm64.
 ARG TARGETARCH
-ARG CHATGPT_DEB_URL
 ARG POWERSHELL_VERSION
 ARG POWERSHELL_PREREQUISITES
 

@@ -17,7 +17,7 @@ services:
         UV_VERSION: "0.13.7"               # Creates Serena's Python environment
         POWERSHELL_VERSION: "7.6.9"        # Runs setup, desktop supervision, and workspace commands
         POWERSHELL_PREREQUISITES: ca-certificates curl
-        CHATGPT_VERSION: "26.1106.51428"   # Desktop app and bundled Codex CLI
+        CHATGPT_VERSION: "latest"          # Desktop app and bundled Codex CLI; use a numeric version to pin it
         # Build arguments are scalars, so pass APT arguments as a commented JSON array.
         # Use "package" for the available version or "package=version" to pin it.
         APT_PACKAGES: |-
