@@ -22,7 +22,7 @@ COMPOSE_PROJECT_NAME=myapp
 CODEX_WORKSPACE_PATH=../..
 ```
 
-Compose appends `-codex-sandbox` to `COMPOSE_PROJECT_NAME` for both the container and the local image. The example above creates `myapp-codex-sandbox`. The initializer lowercases the workspace folder name and normalizes it for Docker. For a manual prefix, use lowercase letters, digits, and hyphens between words. Choose a distinct prefix if two checkouts share the same normalized name.
+Compose uses `COMPOSE_PROJECT_NAME` as the container name and appends `-codex-sandbox` to the local image tag. The example above creates the `myapp` container with the `myapp-codex-sandbox` image. The initializer lowercases the workspace folder name and normalizes it for Docker. For a manual prefix, use lowercase letters, digits, and hyphens between words. Choose a distinct prefix if two checkouts share the same normalized name.
 
 Set `CODEX_WORKSPACE_PATH` relative to the submodule, or use an absolute path. For a submodule directly under the workspace root, use `..`.
 
@@ -42,8 +42,9 @@ Run `docker-compose stop` to stop the desktop, or quit the desktop app. Closing 
 - `UV_PACKAGES` uses the same format for Python requirements: use `"package"` for the available version or `"package==version"` to pin it. These packages share the `/opt/serena` virtual environment; keep `serena-agent` in the list for the configured MCP server and C# language server setup.
 - `CHATGPT_VERSION` defaults to `"latest"`; set a numeric release version to pin the desktop app.
 - After updating dependencies or the submodule, run `docker-compose up --build` to rebuild and start the desktop. Use `docker-compose build` to rebuild the image alone. To refresh floating dependencies such as ChatGPT `latest`, run `docker-compose build --no-cache` followed by `docker-compose up`.
-- Settings, login, and browser data persist in `<project-name>-codex_desktop-home`. For example, `myapp` uses `myapp-codex_desktop-home`. Avoid `docker-compose down --volumes` unless you intend to erase them.
-- If you rename the workspace folder or an older prefix is invalid in an image name (for example, `build_`), update `COMPOSE_PROJECT_NAME` in the sandbox's local `.env`. To reuse the saved home, find its volume with `docker volume ls` and set `CODEX_HOME_VOLUME` to that name before starting.
+- By default, settings, login, and browser data persist in `<project-name>-codex_desktop-home`. For example, `myapp` uses `myapp-codex_desktop-home`. Avoid `docker-compose down --volumes` unless you intend to erase them.
+- If you rename the workspace folder or an older prefix is invalid in an image name (for example, `build_`), update `COMPOSE_PROJECT_NAME` in the sandbox's local `.env`.
+- To reuse an existing home volume, find it with `docker volume ls` and set `CODEX_HOME_VOLUME` to its exact name in `.env` before starting. For example, use `CODEX_HOME_VOLUME=pub-codex-sandbox_desktop-home` if that volume holds your desktop data.
 - `/workspace` is the writable host checkout: edits, including Git operations, immediately affect host files.
 - The viewer listens only on `127.0.0.1:6080`. The container runs non-root, but nested app/browser sandboxes are disabled and Codex defaults to Full access (`sandbox_mode = "danger-full-access"`, `approval_policy = "never"`), without command approval prompts. Credentials are stored in the home volume; outbound networking can reach host/LAN services.
 

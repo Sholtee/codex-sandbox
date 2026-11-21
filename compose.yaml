@@ -11,8 +11,8 @@ services:
     extends:
       file: ./Image/dependencies.yml
       service: codex
-    container_name: &sandbox-name ${COMPOSE_PROJECT_NAME}-codex-sandbox
-    image: *sandbox-name
+    container_name: ${COMPOSE_PROJECT_NAME}
+    image: ${COMPOSE_PROJECT_NAME}-codex-sandbox
     pull_policy: never
     build:
       context: ./Image
