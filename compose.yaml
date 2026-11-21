@@ -11,8 +11,8 @@ services:
     extends:
       file: ./Image/dependencies.yml
       service: codex
-    container_name: ${COMPOSE_PROJECT_NAME}
-    image: ${COMPOSE_PROJECT_NAME}-codex-sandbox
+    image: &sandbox-name ${COMPOSE_PROJECT_NAME}-codex-sandbox
+    container_name: *sandbox-name
     pull_policy: never
     build:
       context: ./Image
@@ -22,7 +22,7 @@ services:
     user: "1000:1000"
     working_dir: /workspace
     environment:
-      VNC_DESKTOP_NAME: "${COMPOSE_PROJECT_NAME}-codex-sandbox"
+      VNC_DESKTOP_NAME: *sandbox-name
       NOVNC_PORT: "${NOVNC_PORT:-6080}"
       VNC_PASSWORD: "${VNC_PASSWORD:-codexdev}"
       RUST_LOG: "off"
@@ -60,4 +60,4 @@ services:
 
 volumes:
   desktop-home:
-    name: ${CODEX_HOME_VOLUME:-${COMPOSE_PROJECT_NAME}-codex_desktop-home}
+    name: ${CODEX_HOME_VOLUME:-${COMPOSE_PROJECT_NAME}-codex-sandbox_desktop-home}

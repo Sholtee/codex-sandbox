@@ -21,7 +21,7 @@ docker compose up -d
 
 Closing the viewer tab leaves the desktop running. Reopen the same link to reconnect. To stop the desktop, run `docker compose stop` from the sandbox directory. Run `docker compose up -d` there to resume.
 
-Your sign-in, settings, and browser data persist in a Docker volume across stops and rebuilds. `docker compose down --volumes` erases that data. If you change `COMPOSE_PROJECT_NAME`, use `docker volume ls` to find the original home volume. Set `CODEX_HOME_VOLUME` in `.env` to its exact name before starting the desktop again.
+Your sign-in, settings, and browser data persist in a Docker volume across stops and rebuilds. `docker compose down --volumes` erases that data.
 
 ## Configure the workspace and viewer
 
