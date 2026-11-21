@@ -21,9 +21,7 @@ ARG POWERSHELL_PREREQUISITES
 ENV POWERSHELL_TELEMETRY_OPTOUT=true \
     POWERSHELL_UPDATECHECK=Off \
     DOTNET_ROOT=/usr/share/dotnet \
-    DOTNET_CLI_TELEMETRY_OPTOUT=true \
-    DOTNET_ADD_GLOBAL_TOOLS_TO_PATH=false \
-    DOTNET_GENERATE_ASPNET_CERTIFICATE=false
+    DOTNET_CLI_TELEMETRY_OPTOUT=true
 
 COPY --from=dotnet /usr/share/dotnet /usr/share/dotnet
 COPY --from=uv /uv /uvx /usr/local/bin/
