@@ -21,6 +21,5 @@ if ($LASTEXITCODE -ne 0 -or !$roots) { throw 'Could not locate the Git workspace
 
 $workspace = Get-Item -LiteralPath $roots[0]
 $project = ($workspace.Name.ToLowerInvariant() -creplace '[^a-z0-9_-]', '').Trim('-', '_')
-$relativePath = [IO.Path]::GetRelativePath($PSScriptRoot, $workspace.FullName).Replace('\', '/') 
-New-Item -Path $envFile -ItemType File -Value "COMPOSE_PROJECT_NAME=$project`nCODEX_WORKSPACE_PATH=$relativePath`n" | Out-Null
+New-Item -Path $envFile -ItemType File -Value "COMPOSE_PROJECT_NAME=$project`nCODEX_WORKSPACE_PATH=$([IO.Path]::GetRelativePath($PSScriptRoot, $workspace.FullName).Replace('\', '/'))`n" | Out-Null
 Write-Host "Configured sandbox for $($workspace.FullName) using project '$project'."

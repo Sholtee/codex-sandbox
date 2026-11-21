@@ -13,14 +13,13 @@ $PSNativeCommandUseErrorActionPreference = $true
 # Chromium handles sign-in; Openbox and TigerVNC supply the virtual desktop;
 # noVNC/websockify expose it to the host browser. The remaining packages provide
 # desktop integration, fonts, readiness probes, and development dependencies.
-$packages = @(ConvertFrom-Json -InputObject $env:APT_PACKAGES)
 apt-get update
-apt-get install -y --no-install-recommends @packages
+apt-get install -y --no-install-recommends @(ConvertFrom-Json -InputObject $env:APT_PACKAGES)
 
 # Keep executables outside the persistent home so image upgrades also update
 # existing profiles. Seed Roslyn's writable cache at startup, without downloads.
 uv venv --python /usr/bin/python3 /opt/serena
-uv pip install --python /opt/serena/bin/python "serena-agent==$env:SERENA_VERSION"
+uv pip install --python /opt/serena/bin/python @(ConvertFrom-Json -InputObject $env:UV_PACKAGES)
 # Desktop login shells reset PATH, so expose both tools in a standard directory.
 ln --symbolic /usr/share/dotnet/dotnet /usr/local/bin/dotnet
 ln --symbolic /opt/serena/bin/serena /usr/local/bin/serena
@@ -46,18 +45,17 @@ install -d -o codex -g codex /workspace
 # a browser callback starts another app instance.
 foreach ($path in (dpkg-query -L chatgpt)) {
   if ($path -like '/usr/share/applications/*.desktop') {
-    $entry = Get-Content -LiteralPath $path -Raw
-    $entry = $entry -replace '(?m)^Exec=.*$', 'Exec=/usr/local/bin/launch-chatgpt.sh %U'
-    Set-Content -LiteralPath $path -Value $entry -NoNewline
+    Set-Content -LiteralPath $path -NoNewline -Value (
+      (Get-Content -LiteralPath $path -Raw) -replace '(?m)^Exec=.*$', 'Exec=/usr/local/bin/launch-chatgpt.sh %U'
+    )
   }
 }
 update-desktop-database /usr/share/applications
 # Separate strings use Linux line endings even when this script was checked out
 # with CRLF. A trailing CR makes xdg-mime ignore the configured desktop filename.
-$defaultApplications = @(
+Set-Content -LiteralPath /etc/xdg/mimeapps.list -Value @(
   '[Default Applications]'
   'x-scheme-handler/http=container-browser.desktop'
   'x-scheme-handler/https=container-browser.desktop'
   'text/html=container-browser.desktop'
 )
-Set-Content -LiteralPath /etc/xdg/mimeapps.list -Value $defaultApplications

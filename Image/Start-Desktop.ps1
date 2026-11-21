@@ -104,13 +104,11 @@ $signals = @(
 $exitCode = 1
 
 try {
-  $passwordFile = Initialize-VncPassword
-
   # Raw VNC and X11 remain container-local. Only noVNC is published by Compose.
   $display = Start-DesktopProcess 'Xtigervnc' @(
     $env:DISPLAY, '-geometry', '1600x1000', '-depth', '24',
     '-rfbport', '5900', '-localhost', 'yes', '-SecurityTypes', 'VncAuth',
-    '-PasswordFile', $passwordFile, '-AlwaysShared', '-nolisten', 'tcp', '-ac'
+    '-PasswordFile', (Initialize-VncPassword), '-AlwaysShared', '-nolisten', 'tcp', '-ac'
   )
   $services.Add($display)
 

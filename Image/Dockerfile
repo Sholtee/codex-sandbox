@@ -38,9 +38,9 @@ RUN apt-get update \
 
 SHELL ["pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-Command"]
 
-ARG SERENA_VERSION
 ARG CHATGPT_VERSION
 ARG APT_PACKAGES
+ARG UV_PACKAGES
 COPY Install-Desktop.ps1 /tmp/Install-Desktop.ps1
 COPY container-browser.desktop /usr/share/applications/container-browser.desktop
 RUN & /tmp/Install-Desktop.ps1

@@ -17,7 +17,6 @@ services:
         UV_VERSION: "0.13.7"               # Creates Serena's Python environment
         POWERSHELL_VERSION: "7.6.9"        # Runs setup, desktop supervision, and workspace commands
         POWERSHELL_PREREQUISITES: ca-certificates curl
-        SERENA_VERSION: "2.1.0"            # Code navigation and editing through MCP
         CHATGPT_VERSION: "26.1106.51428"   # Desktop app and bundled Codex CLI
         # Build arguments are scalars, so pass APT arguments as a commented JSON array.
         # Use "package" for the available version or "package=version" to pin it.
@@ -44,4 +43,9 @@ services:
             "websockify", // Bridges the browser viewer's WebSocket connection to VNC.
             "x11-utils", // Supplies xdpyinfo for display readiness and health checks.
             "xdg-utils" // Desktop URL opening and default application integration.
+          ]
+        # Pass uv requirements in the same format; use "package==version" to pin one.
+        UV_PACKAGES: |-
+          [
+            "serena-agent" // Code navigation and editing through MCP.
           ]
