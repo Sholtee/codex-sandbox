@@ -1,4 +1,10 @@
-# Container agent instructions
+# Agent instructions
+
+## Global Computer State: Changes Prohibited
+
+**Agents MUST NOT modify global computer state, including any user-wide or machine-wide settings, files, resources, or services.** Only an explicit user request for a specific global change overrides this prohibition for that change. Authorization to implement, build, test, format, install project dependencies, or troubleshoot does not authorize global changes.
+
+The prohibition also applies to indirect changes caused by invoked tools, SDK first-run initialization, installers, and child processes. Configure tools to prevent those side effects before running them. If a required operation cannot stay within the authorized scope, stop and request explicit authorization for the specific global change.
 
 ## Serena workflow
 
@@ -19,10 +25,9 @@ Serena is not required for simple documentation-only edits, direct command-outpu
 
 ## PowerShell usage
 
-- Use PowerShell (`pwsh`) for shell commands and automation in this container. Write PowerShell syntax rather than assuming a Bash shell.
+- Use PowerShell (`pwsh`) for shell commands and automation. Write PowerShell syntax rather than assuming a Bash shell.
 - Use UTF-8, LF line endings, and spaces for indentation.
 - Use PowerShell-native filesystem operations with `-LiteralPath` when operating on an existing path. Verify resolved absolute paths and ownership before deleting task-created files or directories.
-- Keep setup changes local to the task process and its children. Do not use `setx`, persistent `User`/`Machine` environment writes, registry edits, or global configuration commands for routine setup.
 - Use installed tools' existing configuration and default cache and temporary-file locations. Do not redirect CLI homes, user-data directories, caches, or temporary directories with environment overrides.
 - In automation scripts, stop on unhandled PowerShell and native-command failures:
 
