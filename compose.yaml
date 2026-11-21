@@ -22,6 +22,7 @@ services:
     user: "1000:1000"
     working_dir: /workspace
     environment:
+      VNC_DESKTOP_NAME: "${COMPOSE_PROJECT_NAME}-codex-sandbox"
       NOVNC_PORT: "${NOVNC_PORT:-6080}"
       VNC_PASSWORD: "${VNC_PASSWORD:-codexdev}"
       RUST_LOG: "off"

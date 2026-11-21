@@ -117,6 +117,7 @@ try {
     $env:DISPLAY, '-geometry', '1600x1000', '-depth', '24',
     '-rfbport', '5900', '-localhost', 'yes', '-SecurityTypes', 'VncAuth',
     '-PasswordFile', (Initialize-VncPassword), '-AlwaysShared', '-nolisten', 'tcp', '-ac'
+    if ($env:VNC_DESKTOP_NAME) { '-desktop', $env:VNC_DESKTOP_NAME }
   )
   $services.Add($display)
 
