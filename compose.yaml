@@ -1,0 +1,61 @@
+#############################################################################
+#                                                                           #
+# compose.yaml                                                              #
+#                                                                           #
+# Author: Denes Solti                                                       #
+#                                                                           #
+#############################################################################
+
+services:
+  codex:
+    extends:
+      file: ./Image/dependencies.yml
+      service: codex
+    container_name: &sandbox-name ${COMPOSE_PROJECT_NAME}-codex-sandbox
+    image: *sandbox-name
+    pull_policy: never
+    build:
+      context: ./Image
+      dockerfile: Dockerfile
+    init: true
+    hostname: codex-desktop
+    user: "1000:1000"
+    working_dir: /workspace
+    environment:
+      VNC_PASSWORD: "${VNC_PASSWORD:-codexdev}"
+      RUST_LOG: "off"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    # Linux counts threads toward this limit; leave room for the desktop,
+    # language servers, and builds to run together.
+    pids_limit: 4096
+    mem_limit: 24g
+    cpus: 4.0
+    shm_size: 512m
+    ports:
+      - "127.0.0.1:6080:6080"
+    # Keep /tmp writable with a read-only root filesystem and discard diagnostic
+    # logs on stop so they do not accumulate in the persistent home volume.
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=1g,mode=1777
+      - /home/codex/.codex/log:rw,nosuid,nodev,noexec,size=10g,uid=1000,gid=1000,mode=0700
+    volumes:
+      - type: bind
+        source: ${CODEX_WORKSPACE_PATH:?Set CODEX_WORKSPACE_PATH to the host workspace folder}
+        target: /workspace
+        bind:
+          create_host_path: false
+      - desktop-home:/home/codex
+    healthcheck:
+      test: ["CMD", "pwsh", "-NoLogo", "-NoProfile", "-NonInteractive", "-File", "/usr/local/bin/Test-Desktop.ps1"]
+      interval: 15s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+
+volumes:
+  desktop-home:
+    name: ${CODEX_HOME_VOLUME:-${COMPOSE_PROJECT_NAME}-codex_desktop-home}

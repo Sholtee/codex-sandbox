@@ -1,0 +1,47 @@
+#############################################################################
+#                                                                           #
+# dependencies.yml                                                          #
+#                                                                           #
+# Author: Denes Solti                                                       #
+#                                                                           #
+#############################################################################
+
+# Compose fragment inherited by ../compose.yaml through services.codex.extends.
+# services.codex.build.args maps Dockerfile ARG names to their build-time values.
+services:
+  codex:
+    build:
+      args:
+        DEBIAN_VERSION: trixie-slim        # Desktop base image
+        DOTNET_VERSION: "11.0"             # SDK and runtime for the workspace
+        UV_VERSION: "0.13.7"               # Creates Serena's Python environment
+        POWERSHELL_VERSION: "7.6.9"        # Runs setup, desktop supervision, and workspace commands
+        POWERSHELL_PREREQUISITES: ca-certificates curl
+        SERENA_VERSION: "2.1.0"            # Code navigation and editing through MCP
+        CHATGPT_VERSION: "26.1106.51428"   # Desktop app and bundled Codex CLI
+        # Build arguments are scalars, so pass APT arguments as a commented JSON array.
+        # Use "package" for the available version or "package=version" to pin it.
+        APT_PACKAGES: |-
+          [
+            "chromium", // Browser inside the desktop for sign-in and web links.
+            "dbus-daemon", // Supplies dbus-run-session for the desktop session bus.
+            "desktop-file-utils", // Refreshes desktop entries and URI-handler registrations.
+            "fonts-dejavu-core", // Basic desktop and browser text fonts.
+            "fonts-noto-color-emoji", // Emoji rendering in the desktop and browser.
+            "git", // Repository operations in the workspace.
+            "novnc", // Browser-based viewer for the virtual desktop.
+            "openbox", // Window manager for the desktop application and browser.
+            "patch", // Applies source patches in the workspace.
+            "procps", // Process inspection tools for development and diagnostics.
+            "python3", // Interpreter for Serena.
+            "libgssapi-krb5-2", // Kerberos/GSSAPI native support for .NET.
+            "libicu76", // Unicode and globalization support for .NET.
+            "libssl3t64", // TLS and cryptography support for .NET.
+            "libstdc++6", // C++ runtime required by .NET native components.
+            "zlib1g", // Native compression support for .NET.
+            "tigervnc-standalone-server", // Virtual X display and VNC server.
+            "tigervnc-tools", // Supplies tigervncpasswd for viewer authentication.
+            "websockify", // Bridges the browser viewer's WebSocket connection to VNC.
+            "x11-utils", // Supplies xdpyinfo for display readiness and health checks.
+            "xdg-utils" // Desktop URL opening and default application integration.
+          ]

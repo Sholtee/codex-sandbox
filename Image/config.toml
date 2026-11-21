@@ -1,0 +1,11 @@
+# Docker supplies the outer boundary; nested Linux sandboxes need privileges
+# that this container deliberately does not receive.
+sandbox_mode = "danger-full-access"
+approval_policy = "never"
+cli_auth_credentials_store = "file"
+
+[mcp_servers.serena]
+command = "/opt/serena/bin/serena"
+args = ["start-mcp-server", "--context", "codex", "--project", "/workspace", "--open-web-dashboard", "false"]
+startup_timeout_sec = 120
+tool_timeout_sec = 120

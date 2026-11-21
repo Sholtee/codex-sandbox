@@ -1,0 +1,10 @@
+# Only container startup files enter the image, never the source checkout.
+**
+!Install-Desktop.ps1
+!Start-Desktop.ps1
+!Test-Desktop.ps1
+!Test-Development.ps1
+!launch-chatgpt.sh
+!container-browser.sh
+!container-browser.desktop
+!config.toml
