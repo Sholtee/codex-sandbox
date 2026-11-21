@@ -21,7 +21,9 @@ ARG POWERSHELL_PREREQUISITES
 ENV POWERSHELL_TELEMETRY_OPTOUT=true \
     POWERSHELL_UPDATECHECK=Off \
     DOTNET_ROOT=/usr/share/dotnet \
-    DOTNET_CLI_TELEMETRY_OPTOUT=true
+    DOTNET_CLI_TELEMETRY_OPTOUT=true \
+    DOTNET_ADD_GLOBAL_TOOLS_TO_PATH=false \
+    DOTNET_GENERATE_ASPNET_CERTIFICATE=false
 
 COPY --from=dotnet /usr/share/dotnet /usr/share/dotnet
 COPY --from=uv /uv /uvx /usr/local/bin/
@@ -47,7 +49,7 @@ RUN Remove-Item -LiteralPath /tmp/Install-Desktop.ps1
 
 COPY Start-Desktop.ps1 Test-Desktop.ps1 Test-Development.ps1 /usr/local/bin/
 COPY --chmod=0755 launch-chatgpt.sh container-browser.sh /usr/local/bin/
-COPY config.toml /etc/codex/config.toml
+COPY config.toml AGENTS.md /etc/codex/
 
 # Throwaway local viewer password, visible in the source and image metadata.
 # Use 6-8 printable ASCII characters; override VNC_PASSWORD at runtime to change it.

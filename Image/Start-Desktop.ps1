@@ -23,6 +23,13 @@ function Initialize-DBusSession {
   }
 }
 
+# Existing home volumes hide image-layer files under /home/codex. Refresh the
+# global instructions at startup so rebuilt images update those volumes too.
+function Initialize-CodexInstructions {
+  New-Item -ItemType Directory -Path $env:CODEX_HOME -Force | Out-Null
+  Copy-Item -LiteralPath /etc/codex/AGENTS.md -Destination $env:CODEX_HOME -Force
+}
+
 function Initialize-SerenaCache {
   $resources = Join-Path ([Environment]::GetFolderPath('UserProfile')) '.serena/language_servers/static'
   New-Item -ItemType Directory -Path $resources -Force | Out-Null
@@ -93,6 +100,7 @@ function Wait-DesktopDisplay {
 }
 
 Initialize-DBusSession -Arguments $args
+Initialize-CodexInstructions
 Initialize-DesktopSignals
 Initialize-SerenaCache
 

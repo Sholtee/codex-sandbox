@@ -51,6 +51,10 @@ On Linux, the checkout must be writable by UID/GID 1000. External Git worktree m
 
 ## Development
 
+[Image/AGENTS.md](Image/AGENTS.md) supplies global Serena and PowerShell guidance for Codex. Put project-specific instructions in the workspace's `AGENTS.md`.
+
+The image disables PowerShell and .NET CLI telemetry through container-wide environment defaults. It also disables automatic .NET development-certificate generation and global-tool PATH updates.
+
 The image includes PowerShell, .NET, Git, Python, uv, and Serena with its C# language server. To print the installed tool versions from a desktop login shell, run
 
 ```sh
