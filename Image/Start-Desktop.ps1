@@ -10,9 +10,7 @@ $ErrorActionPreference = 'Stop'
 $PSNativeCommandUseErrorActionPreference = $true
 Set-StrictMode -Version Latest
 
-function Initialize-DBusSession {
-  param([string[]] $Arguments = @())
-
+function Initialize-DBusSession([string[]] $Arguments = @()) {
   # D-Bus needs this directory before it starts, including on a fresh /tmp mount.
   install -d -m 0700 -- $env:XDG_RUNTIME_DIR
   if (!$env:DBUS_SESSION_BUS_ADDRESS) {
@@ -33,6 +31,8 @@ function Initialize-CodexInstructions {
 function Initialize-SerenaCache {
   $resources = Join-Path ([Environment]::GetFolderPath('UserProfile')) '.serena/language_servers/static'
   New-Item -ItemType Directory -Path $resources -Force | Out-Null
+  # Seed missing files without overwriting the user's cache. Copy-Item -Recurse
+  # has no equivalent to --update=none and can overwrite existing files.
   & /bin/cp --recursive --update=none /opt/serena-language-servers/. $resources
 }
 
@@ -59,9 +59,7 @@ public static class DesktopSignals
 '@
 }
 
-function Start-DesktopProcess {
-  param([string] $FileName, [string[]] $Arguments = @())
-
+function Start-DesktopProcess([Parameter(Mandatory)] [string] $FileName, [string[]] $Arguments = @()) {
   # ArgumentList preserves empty arguments, spaces, and sign-in callback URLs.
   $startInfo = [Diagnostics.ProcessStartInfo]@{
     FileName = $FileName
@@ -84,9 +82,7 @@ function Initialize-VncPassword {
   return $passwordFile
 }
 
-function Wait-DesktopDisplay {
-  param([Diagnostics.Process] $DisplayProcess)
-
+function Wait-DesktopDisplay([Parameter(Mandatory)] [Diagnostics.Process] $DisplayProcess) {
   # Failed probes are expected while the display starts; bound each attempt.
   $PSNativeCommandUseErrorActionPreference = $false
   $readiness = [Diagnostics.Stopwatch]::StartNew()
